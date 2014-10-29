@@ -364,7 +364,7 @@ static const CGFloat kFitFrameRadius = -1.0;
                                       radius:self.radius
                                    lineWidth:self.lineWidth
                           fromAngleFromNorth:0
-                            toAngleFromNorth:self.angleFromNorth];
+                            toAngleFromNorth:self.angleFromNorth + 1];
 }
 
 -(void) drawHandle:(CGContextRef)ctx{
