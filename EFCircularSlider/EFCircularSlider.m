@@ -112,7 +112,7 @@
     if((_handleType == EFDoubleCircleWithClosedCenter || _handleType == EFDoubleCircleWithOpenCenter) && fixedAngle > 5) {
         CGContextAddArc(ctx, self.frame.size.width/2  , self.frame.size.height/2, self.radius, 3*M_PI/2, 3*M_PI/2-ToRad(angle+3), 0);
     } else {
-        CGContextAddArc(ctx, self.frame.size.width/2  , self.frame.size.height/2, self.radius, 3*M_PI/2, 3*M_PI/2-ToRad(angle), 0);
+        CGContextAddArc(ctx, self.frame.size.width/2  , self.frame.size.height/2, self.radius, 3*M_PI/2, 3*M_PI/2-ToRad(angle + 1), 0);
     }
     [_filledColor setStroke];
     CGContextSetLineWidth(ctx, _lineWidth);
@@ -255,7 +255,14 @@
     CGPoint centerPoint;
     centerPoint = [self centerPoint];
     int currentAngle = floor(AngleFromNorth(centerPoint, point, NO));
-    angle = 360 - 90 - currentAngle;
+    int newAngle = 360 - 90 - currentAngle;
+    if ((angle < 50 && angle >= 0) && newAngle < 0) {
+        newAngle = 0;
+    }
+    if ((angle > -50 && angle < 0) && newAngle >= 0) {
+        newAngle = -1;
+    }
+    angle = newAngle;
     _currentValue = [self valueFromAngle];
     [self setNeedsDisplay];
 }
@@ -324,7 +331,8 @@ static inline float AngleFromNorth(CGPoint p1, CGPoint p2, BOOL flipped) {
         _currentValue = 270 - angle + 90;
     }
     fixedAngle = _currentValue;
-    return (_currentValue*(_maximumValue - _minimumValue))/360.0f;
+    float value = (_currentValue*(_maximumValue - _minimumValue))/360.0f;
+    return value;
 }
 
 - (float)angleFromValue {
